@@ -1,7 +1,207 @@
 {
   "version": 2,
-  "projects": {},
+  "projects": {
+    "config-manager": {
+      "root": "packages/config-manager",
+      "sourceRoot": "packages/config-manager/src",
+      "projectType": "application",
+      "targets": {
+        "build": {
+          "executor": "@nrwl/web:build",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "outputPath": "dist/packages/config-manager",
+            "index": "packages/config-manager/src/index.html",
+            "main": "packages/config-manager/src/main.tsx",
+            "polyfills": "packages/config-manager/src/polyfills.ts",
+            "tsConfig": "packages/config-manager/tsconfig.app.json",
+            "assets": [
+              "packages/config-manager/src/favicon.ico",
+              "packages/config-manager/src/assets"
+            ],
+            "styles": ["packages/config-manager/src/styles.css"],
+            "scripts": [],
+            "webpackConfig": "@nrwl/react/plugins/webpack"
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "packages/config-manager/src/environments/environment.ts",
+                  "with": "packages/config-manager/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "1mb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "executor": "@nrwl/web:dev-server",
+          "options": {
+            "buildTarget": "config-manager:build",
+            "hmr": true
+          },
+          "configurations": {
+            "production": {
+              "buildTarget": "config-manager:build:production",
+              "hmr": false
+            }
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["packages/config-manager/**/*.{ts,tsx,js,jsx}"]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/packages/config-manager"],
+          "options": {
+            "jestConfig": "packages/config-manager/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "config-manager-e2e": {
+      "root": "packages/config-manager-e2e",
+      "sourceRoot": "packages/config-manager-e2e/src",
+      "projectType": "application",
+      "targets": {
+        "e2e": {
+          "executor": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "packages/config-manager-e2e/cypress.json",
+            "tsConfig": "packages/config-manager-e2e/tsconfig.e2e.json",
+            "devServerTarget": "config-manager:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "config-manager:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["packages/config-manager-e2e/**/*.{js,ts}"]
+          }
+        }
+      }
+    },
+    "renderers": {
+      "root": "packages/renderers",
+      "sourceRoot": "packages/renderers/src",
+      "projectType": "library",
+      "targets": {
+        "build": {
+          "executor": "@nrwl/web:package",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "outputPath": "dist/packages/renderers",
+            "tsConfig": "packages/renderers/tsconfig.lib.json",
+            "project": "packages/renderers/package.json",
+            "entryFile": "packages/renderers/src/index.ts",
+            "external": ["react/jsx-runtime"],
+            "rollupConfig": "@nrwl/react/plugins/bundle-rollup",
+            "assets": [
+              {
+                "glob": "packages/renderers/README.md",
+                "input": ".",
+                "output": "."
+              }
+            ]
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["packages/renderers/**/*.{ts,tsx,js,jsx}"]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/packages/renderers"],
+          "options": {
+            "jestConfig": "packages/renderers/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "ui-core": {
+      "root": "packages/ui-core",
+      "sourceRoot": "packages/ui-core/src",
+      "projectType": "library",
+      "targets": {
+        "build": {
+          "executor": "@nrwl/web:package",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "outputPath": "dist/packages/ui-core",
+            "tsConfig": "packages/ui-core/tsconfig.lib.json",
+            "project": "packages/ui-core/package.json",
+            "entryFile": "packages/ui-core/src/index.ts",
+            "external": ["react/jsx-runtime"],
+            "rollupConfig": "@nrwl/react/plugins/bundle-rollup",
+            "assets": [
+              {
+                "glob": "packages/ui-core/README.md",
+                "input": ".",
+                "output": "."
+              }
+            ]
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["packages/ui-core/**/*.{ts,tsx,js,jsx}"]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/packages/ui-core"],
+          "options": {
+            "jestConfig": "packages/ui-core/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    }
+  },
   "cli": {
-    "defaultCollection": "@nrwl/workspace"
-  }
+    "defaultCollection": "@nrwl/react"
+  },
+  "generators": {
+    "@nrwl/react": {
+      "application": {
+        "style": "css",
+        "linter": "eslint",
+        "babel": true
+      },
+      "component": {
+        "style": "css"
+      },
+      "library": {
+        "style": "css",
+        "linter": "eslint"
+      }
+    }
+  },
+  "defaultProject": "config-manager"
 }
