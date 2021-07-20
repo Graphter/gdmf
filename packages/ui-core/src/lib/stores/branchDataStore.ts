@@ -8,6 +8,7 @@ import { internalNodeDataStore } from './internalNodeDataStore';
 import { rendererRegStore } from './rendererRegStore';
 import { nanoid } from 'nanoid';
 import { NodeConfig } from '../NodeConfig';
+import internal from 'stream';
 
 const treeDataMap: Map<string, RecoilValueReadOnly<any>> = new Map()
 
@@ -57,7 +58,7 @@ const get = <T>(startingPath: Array<PathSegment>, depth?: number) => {
               return rendererReg.mergeChildData(c, a)
             }
           } else{
-            return internalData || a
+            return typeof internalData === 'undefined' ? a : internalData
           }
 
         }, childData)
