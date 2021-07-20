@@ -3,7 +3,7 @@ import styles from './app.module.css';
 import { ReactComponent as Logo } from './logo.svg';
 import star from './star.svg';
 
-import { Route, Link } from 'react-router-dom';
+import { Route, Link, Redirect } from 'react-router-dom';
 import {
   configStore,
   PathRenderer,
@@ -11,7 +11,7 @@ import {
   useBranchDataCallback,
   useBranchInitialiser
 } from '@gdmf/ui-core';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { pageModel } from './models/pageModel';
 import { simpleTextModel } from './models/simpleTextModel';
 import { pageData } from './models/pageData';
@@ -22,6 +22,7 @@ import {
   objectRegistration,
   textRegistration
 } from '@gdmf/renderers';
+import { Edit } from './pages/Edit';
 
 function App() {
   rendererRegStore.register(objectRegistration)
@@ -30,42 +31,22 @@ function App() {
   rendererRegStore.register(textRegistration)
   rendererRegStore.register(nestedRegistration)
 
-  const rootPath = [ 'model', 'one' ]
-
-  const save = useBranchDataCallback(rootPath, async (branchData) => {
-    console.log({ branchData })
-  })
-
-  const [ initialising, setInitialising ] = useState(true)
-
-  configStore.set(pageModel)
-  configStore.set(simpleTextModel)
-
-  const branchInitialiser = useBranchInitialiser()
-  useEffect(() => {
-    (async () => {
-      setInitialising(true)
-      await branchInitialiser(rootPath, pageModel, '', pageData)
-      //await branchInitialiser(rootPath, model, '', {})
-
-      setInitialising(false)
-    })()
-  }, [])
-
-  if(initialising){
-    return (
-      <div>
-        Loading...
-      </div>
-    )
-  }
-
   return (
-    <div className="App container">
-      <PathRenderer path={[ ...rootPath ]} />
-      <button onClick={save}>Save</button>
-    </div>
-  );
+    <>
+      <Route
+        path="/"
+        exact
+      >
+        <div>
+          <h1>List</h1>
+          <Link to="/model/one">Model One</Link>
+        </div>
+      </Route>
+      <Route path='/:path+'>
+        <Edit/>
+      </Route>
+    </>
+  )
 }
 
 export function App_old() {
