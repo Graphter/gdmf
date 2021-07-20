@@ -1,12 +1,9 @@
 import { isListNodeConfig } from './isListNodeConfig';
 import { nanoid } from 'nanoid';
 import { createDefault, ensureValue, Initialiser } from '@gdmf/ui-core';
+import { InternalListData } from './InternalListData';
 
-type ListInternalData = Array<{
-  committed: boolean,
-  deleted: boolean,
-  order: number
-}>
+type ListInternalData = Array<InternalListData>
 
 export const listInitialiser: Initialiser = async (
   {
@@ -24,7 +21,7 @@ export const listInitialiser: Initialiser = async (
       const externalData = await getBranchData(path)
       const value = Array.isArray(externalData)
         ? externalData.map((item, i) => ({
-          key: nanoid(),
+          editing: false,
           deleted: false,
           committed: true,
           order: i
