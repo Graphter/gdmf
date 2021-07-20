@@ -10,6 +10,7 @@ export const TextRenderer: ComponentType<NodeRendererProps> = (
   const { internalData, setInternalData } = useNodeState(path, config)
   return <input
     type='text'
+    className='flex-grow p-3 rounded'
     value={internalData}
     onChange={(e) => {
       setInternalData(e.currentTarget.value)
