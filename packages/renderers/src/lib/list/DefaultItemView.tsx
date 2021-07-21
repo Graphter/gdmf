@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { NodeConfig, PathSegment } from '@gdmf/ui-core';
+import { NodeConfig, PathSegment, pathUtils, toUrl } from '@gdmf/ui-core';
 import { isListNodeConfig } from './isListNodeConfig';
 import { useBranchData } from '../../../../ui-core/src/lib/hooks/useBranchData';
 import { nanoid } from 'nanoid';
@@ -37,8 +37,12 @@ const DefaultItemView = ({ index, listConfig, path, options, onSelect, onRemove 
     <div className='flex flex-row'>
       <a
         className='flex-grow px-5 mb-2 rounded-lg shadow border border-gray-50 hover:border-blue-200 hover:bg-gray-50 cursor-pointer transition-colours duration-200'
-        onClick={() => onSelect && onSelect(index)}
+        onClick={(e) => {
+          onSelect && onSelect(index)
+          e.preventDefault()
+        }}
         data-testid='default-item-view'
+        href={pathUtils.toUrl(path)}
       >
         <div className='divide-y divide-gray-200'>
           <div className='py-5'>
