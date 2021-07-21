@@ -5,6 +5,7 @@ export function isObjectNodeConfig(config: NodeConfig): asserts config is Object
   const objectConfig = config as ObjectNodeConfig
   const isObjectConfig = 'properties' in config &&
     Array.isArray(objectConfig.properties) &&
-    objectConfig.properties.length > 0
+    objectConfig.properties.length > 0 &&
+    !objectConfig.properties.some(prop => !prop.config || !prop.name)
   if(!isObjectConfig) throw new Error(`Invalid object config ${JSON.stringify(config)}`)
 }

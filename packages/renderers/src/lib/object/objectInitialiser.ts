@@ -12,9 +12,9 @@ export const objectInitialiser: Initialiser = async (
   isObjectNodeConfig(config)
   return {
     layer: parentLayer,
-    children: config.properties.map(propertyConfig => ({
-      path: [ ...path, propertyConfig.id ],
-      config: propertyConfig
+    children: config.properties.map(property => ({
+      path: [ ...path, property.config.id ],
+      config: property.config
     }))
   }
 }

@@ -11,8 +11,24 @@ import { pathConfigsStore } from '../stores/pathConfigsStore';
 import { pathToKey, pathUtils } from '../utils/pathUtils';
 import { defaultUtils } from '../utils/defaultUtils';
 import { branchDataStore } from '../stores/branchDataStore';
+import * as Path from 'path';
 
-const branchInitQueue = createPromiseQueue<void, [ Array<PathSegment>, NodeConfig, string, any ]>()
+export interface StateUpdate {
+  path: Array<PathSegment>,
+  config: NodeConfig,
+  layer:string,
+  value: unknown
+}
+
+const branchInitQueue = createPromiseQueue<
+  void,
+  [
+    Array<PathSegment>,
+    NodeConfig,
+    string,
+    any,
+    Array<StateUpdate> | undefined
+  ]>()
 
 const defaultInitialiser: Initialiser = async (
   {
@@ -25,7 +41,7 @@ const defaultInitialiser: Initialiser = async (
 ) => {
   let internalData = await getInternalData(parentLayer)
   if(typeof internalData === 'undefined') {
-    internalData = getBranchData(path)
+    internalData = await getBranchData(path)
   }
   const defaultedBranchData = await defaultUtils.valueOrDefaultOrNull<any>(config, internalData)
   return {
@@ -41,7 +57,8 @@ export const useBranchInitialiser = () => {
       path: Array<PathSegment>,
       config: NodeConfig,
       parentLayer: string,
-      originalTreeData: any
+      originalTreeData: any,
+      internalDataUpdates?: Array<StateUpdate>
     ) => {
       const newSnapshot = await snapshot.asyncMap(async (mutableSnapshot) => {
 
@@ -65,7 +82,8 @@ export const useBranchInitialiser = () => {
               if(originalTreeData) return
               if(!internalNodeDataStore.has(path, config, layer)) return
               const internalDataState = internalNodeDataStore.get(path, config, layer)
-              return await snapshot.getPromise(internalDataState)
+              const internalData = await mutableSnapshot.getPromise(internalDataState)
+              return internalData
             }
           })
 
@@ -113,14 +131,28 @@ export const useBranchInitialiser = () => {
           }
         }
 
+        // Apply any updates
+        if(internalDataUpdates?.length){
+          internalDataUpdates.forEach(update => {
+            const internalDataState = internalNodeDataStore.get(update.path, update.config, update.layer)
+            mutableSnapshot.set(internalDataState, update.value)
+          })
+        }
+
         await initialiseNode(path, config, parentLayer)
       })
       // TODO: See if we can do this only when there are no more items in the queue to process in order to prevent unnecessary re-renders
       gotoSnapshot(newSnapshot)
     })
 
-  return async (path: Array<PathSegment>, config: NodeConfig, parentLayer: string, originalTreeData?: any) => {
-    await branchInitQueue.enqueue(init, path, config, parentLayer, originalTreeData)
+  return async (
+    path: Array<PathSegment>,
+    config: NodeConfig,
+    parentLayer: string,
+    originalTreeData?: any,
+    stateUpdates?: Array<StateUpdate>
+  ) => {
+    await branchInitQueue.enqueue(init, path, config, parentLayer, originalTreeData, stateUpdates)
   }
 }
 

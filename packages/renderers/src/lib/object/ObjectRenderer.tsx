@@ -13,11 +13,18 @@ export const ObjectRenderer: ComponentType<NodeRendererProps> = (
   const { childMetas } = useNodeState(path, config)
 
   return <>
-    {childMetas.map(childMeta => (
-      <div key={pathToKey(childMeta.path)}>
-        <div>{childMeta.config.id}</div>
-        <DefaultNodeRenderer nodeMeta={childMeta} parentLayer={parentLayer} />
-      </div>
-    ))}
+    {childMetas.map((childMeta, i) => {
+      const property = config.properties[i]
+      const childPathKey = pathToKey(childMeta.path)
+      return (
+        <div key={pathToKey(childMeta.path)} className='flex flex-col mb-5'>
+          <label htmlFor={childPathKey}>{property.name}</label>
+          {property.description && (
+            <p className='text-sm text-gray-400 mb-2'>{property.description}</p>
+          )}
+          <DefaultNodeRenderer nodeMeta={childMeta} parentLayer={parentLayer} />
+        </div>
+      )
+    })}
   </>
 }

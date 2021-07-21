@@ -11,7 +11,7 @@ export const objectRegistration: NodeRendererRegistration = {
     isObjectNodeConfig(config)
     if(!Array.isArray(childData)) throw new Error(`'object' renderer was expecting an array of child data but got '${JSON.stringify(childData)}' instead`)
     return config.properties.reduce<{ [key: string]: any }>((a, c, i) => {
-      a[c.id] = childData[i]
+      a[c.config.id] = childData[i]
       return a
     }, {})
   },
