@@ -2,6 +2,7 @@ import { PathSegment, pathUtils } from '@gdmf/ui-core';
 import { Crumb } from './Crumb';
 import { BreadCrumbMapping } from './BreadCrumbMapping';
 import { Link } from 'react-router-dom';
+import React, { Fragment } from 'react';
 
 interface BreadCrumbsProps {
   path: Array<PathSegment>,
@@ -28,13 +29,13 @@ export const BreadCrumbs = ({ path, mappings }: BreadCrumbsProps) => {
       {paths.map((path, i) => {
         if (i !== paths.length - 1) {
           return (
-            <>
+            <Fragment key={path.length}>
               <Crumb path={path} mappings={mappings} />
               <DividerSvg />
-            </>
+            </Fragment>
           );
         }
-        return <Crumb path={path} mappings={mappings} />;
+        return <Crumb key={path.length} path={path} mappings={mappings} />;
       })}
     </div>
   );
