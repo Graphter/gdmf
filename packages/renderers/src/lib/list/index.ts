@@ -6,9 +6,8 @@ export const listRegistration: NodeRendererRegistration = {
   type: 'list',
   renderer: ListRenderer,
   createDefault: () => [],
-  mergeChildData: (config, childData) => {
-    if(!Array.isArray(childData)) throw new Error(`'list' renderer was expecting an array of child data but got '${JSON.stringify(childData)}' instead`)
-    return childData
+  mergeChildData: (config, children) => {
+    return { config, data: children.map(child => child.data) }
   },
   initialiser: listInitialiser
 }

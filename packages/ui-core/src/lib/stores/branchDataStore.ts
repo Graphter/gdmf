@@ -52,13 +52,13 @@ const get = <T>(startingPath: Array<PathSegment>, depth?: number) => {
           if(a?.length){
             const rendererReg = rendererRegStore.get(c.type)
             if (!rendererReg.mergeChildData){
-              return internalData
+              return { config: c, data: internalData }
             }
             else{
               return rendererReg.mergeChildData(c, a)
             }
           } else{
-            return typeof internalData === 'undefined' ? a : internalData
+            return typeof internalData === 'undefined' ? a : { config: c, data: internalData }
           }
 
         }, childData)
@@ -66,7 +66,7 @@ const get = <T>(startingPath: Array<PathSegment>, depth?: number) => {
         return externalNodeData
       }
 
-      return getNodeData(startingPath)
+      return getNodeData(startingPath).data
     }
   });
   treeDataMap.set(key, treeDataSelector)

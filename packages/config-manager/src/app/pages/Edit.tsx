@@ -26,7 +26,6 @@ export const Edit = () => {
     (async () => {
       setInitialising(true)
       await branchInitialiser(rootPath, pageModel, '', pageData)
-      //await branchInitialiser(rootPath, model, '', {})
 
       setInitialising(false)
     })()
@@ -48,9 +47,14 @@ export const Edit = () => {
         { pathQuery: [ 'page', PathQuery.Any, 'authors' ], displayValue: 'Authors' },
         { pathQuery: [ 'page', PathQuery.Any, 'authors', PathQuery.Any ], displayPath: [ 'name' ] },
       ]} />
-      <form>
+      <form onSubmit={(e) => {
+        (async () => {
+          await save()
+        })()
+        e.preventDefault()
+      }}>
         <PathRenderer path={path} />
-        <button type='submit' onClick={save}>Save</button>
+        <button type='submit'>Save</button>
       </form>
     </div>
   );

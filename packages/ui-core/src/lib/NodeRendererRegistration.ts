@@ -6,7 +6,7 @@ export interface NodeRendererRegistration {
   type: string,
   renderer: ComponentType<NodeRendererProps>,
   createDefault?: (config: NodeConfig) => any | Promise<any>,
-  mergeChildData?: (config: NodeConfig, childData: unknown) => any,
+  mergeChildData?: Merger,
   initialiser?: Initialiser
 }
 
@@ -17,6 +17,13 @@ export interface InitResult {
     path: Array<PathSegment>,
     config: NodeConfig
   }>
+}
+
+export interface Merger {
+  (
+    config: NodeConfig,
+    children: Array<{ config: NodeConfig, data: unknown }>
+  ): unknown
 }
 
 export interface Initialiser {
