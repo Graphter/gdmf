@@ -1,6 +1,7 @@
 import clone from 'rfdc'
 import { PathSegment } from '../PathSegment';
-import { PathQuerySegment } from '../PathQuerySegment';
+import { PathTraversalSegment } from '../PathTraversalSegment';
+import { PathQuery, PathQuerySegment } from '../PathQuerySegment';
 
 export function validate(path?: Array<PathSegment> | null) {
   if (typeof path === null || path === undefined) return {
@@ -90,9 +91,9 @@ export const valueToLocalPaths = (value: any): Array<Array<PathSegment>> => {
   return [ [], ...getChildPaths(value, []) ]
 }
 
-export const resolvePaths = (startPath: Array<PathSegment>, queryPath: Array<PathQuerySegment>) => {
+export const resolvePaths = (startPath: Array<PathSegment>, traversalPath: Array<PathTraversalSegment>) => {
   let currentPath = [ ...startPath ]
-  for (let navSegment of queryPath) {
+  for (let navSegment of traversalPath) {
     switch (typeof navSegment) {
       case 'string':
       case 'number':
@@ -109,7 +110,17 @@ export const resolvePaths = (startPath: Array<PathSegment>, queryPath: Array<Pat
   return [ currentPath ]
 }
 
-export const queryPathToString = (queryPath: Array<PathQuerySegment>) => {
+export const isMatch = (path: Array<PathSegment>, queryPath: Array<PathQuerySegment>) => {
+  if(path.length !== queryPath.length) return false
+  for(let i = 0; i < path.length; i++){
+    const querySegment = queryPath[i]
+    if(querySegment === PathQuery.Any) continue
+    if(path[i] !== querySegment) return false
+  }
+  return true
+}
+
+export const queryPathToString = (queryPath: Array<PathTraversalSegment>) => {
   return queryPath
     .map(querySegment => {
       return typeof querySegment === 'object' ?
@@ -145,6 +156,7 @@ export const pathUtils = {
   getValueByLocalPath,
   valueToLocalPaths,
   resolvePaths,
+  isMatch,
   queryPathToString,
   pathToKey,
   deleteAtGlobalPath

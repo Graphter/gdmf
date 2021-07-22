@@ -1,6 +1,7 @@
-import { Route, Link } from 'react-router-dom';
+import { Route, Link, useParams } from 'react-router-dom';
 import {
-  rendererRegStore,
+  pathUtils,
+  rendererRegStore
 } from '@gdmf/ui-core';
 import React  from 'react';
 import {
@@ -11,6 +12,7 @@ import {
   textRegistration
 } from '@gdmf/renderers';
 import { Edit } from './pages/Edit';
+import { BreadCrumbs } from './components/BreadCrumb/BreadCrumbs';
 
 function App() {
   rendererRegStore.register(objectRegistration)
@@ -22,15 +24,15 @@ function App() {
   return (
     <>
       <Route
-        path="/"
+        path="/:model"
         exact
       >
         <div>
           <h1>List</h1>
-          <Link to="/model/one">Model One</Link>
+          <Link to="/page/one">Page One</Link>
         </div>
       </Route>
-      <Route path='/:path+'>
+      <Route path='/:model/:path+'>
         <Edit/>
       </Route>
     </>
