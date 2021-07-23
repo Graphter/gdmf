@@ -2,7 +2,7 @@ export const pageData = {
   title: 'Some blog post',
   description: 'This is a blog post about something',
   type: 'blog',
-  authors: [
+  blogAuthors: [
     {
       name: 'Jon Pritchard',
       address: {
@@ -22,6 +22,6 @@ export const pageData = {
       }
     }
   ],
-  'nested-content': 'hello',
+  nestedContent: 'hello',
   content: 'This is the page content about the blog post'
 }

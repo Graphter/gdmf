@@ -1,7 +1,7 @@
 import { NodeConfig } from '@gdmf/ui-core';
 
 export interface PropertyConfig {
-  name: string,
+  name?: string,
   description?: string,
   config: NodeConfig
 }

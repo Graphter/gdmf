@@ -34,13 +34,13 @@ export const pageModel = {
       name: 'Authors',
       description: 'The authors of the page',
       config: {
-        id: 'authors',
+        id: 'authors-conditional',
         type: 'conditional',
         branches: new Map<string, any>([
           [
             'blog',
             {
-              id: 'blog-authors',
+              id: 'blogAuthors',
               type: 'list',
               titlePath: ['name'],
               supplementaryInformationPaths: [
@@ -128,9 +128,9 @@ export const pageModel = {
       name: 'Nested content',
       description: 'Some nested content?',
       config: {
-        id: 'nested-content',
+        id: 'nestedContent',
         type: 'nested',
-        nestedConfigId: 'simple-text'
+        nestedConfigId: 'simpleText'
       }
     },
     {
@@ -139,6 +139,31 @@ export const pageModel = {
       config: {
         id: 'content',
         type: 'text'
+      }
+    },
+    {
+      config: {
+        id: 'links',
+        type: 'transparent-object',
+        createDefault: () => ({}),
+        properties: [
+          {
+            name: 'Image Source',
+            config: {
+              id: 'imageSource',
+              type: 'text',
+              createDefault: () => ''
+            }
+          },
+          {
+            name: 'Copyright',
+            config: {
+              id: 'copyright',
+              type: 'text',
+              createDefault: () => ''
+            }
+          }
+        ]
       }
     }
   ]

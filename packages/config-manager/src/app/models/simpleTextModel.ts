@@ -1,7 +1,7 @@
 import { NodeConfig } from '@gdmf/ui-core';
 
 export const simpleTextModel: NodeConfig = {
-  id: 'simple-text',
+  id: 'simpleText',
   type: 'text',
   createDefault: () => ''
 }

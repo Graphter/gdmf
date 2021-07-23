@@ -37,7 +37,11 @@ const get = <T>(startingPath: Array<PathSegment>, depth?: number) => {
           const childPathsState = childPathStore.get(path, layer)
           const childPaths = get(childPathsState)
           if(typeof childPaths === 'undefined' || childPaths.length === 0) return null
-          return childPaths.map(childPath => getNodeData(childPath))
+          // Child data may come back in array form for transparent merges
+          return childPaths.flatMap(childPath => {
+            const children = getNodeData(childPath)
+            return Array.isArray(children) ? children : [ children ]
+          })
         }
 
         if(!pathConfigs.length) return null
