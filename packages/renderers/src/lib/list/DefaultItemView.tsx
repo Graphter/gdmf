@@ -27,7 +27,7 @@ interface KeyValueDefinition {
 const DefaultItemView = ({ index, listConfig, path, options, onSelect, onRemove }: DefaultItemViewProps) => {
   isListNodeConfig(listConfig);
   const titlePath = [ ...path, ...listConfig.titlePath ];
-  let title = useBranchData(titlePath);
+  let title = useBranchData<any>(titlePath);
   if (typeof title !== 'string') title = JSON.stringify(title);
   const [ supplementaryInformationPaths ] = useState(listConfig.supplementaryInformationPaths?.map(supp => ({
     ...supp,
@@ -73,7 +73,7 @@ const DefaultItemView = ({ index, listConfig, path, options, onSelect, onRemove 
 };
 
 const Description = ({ descriptionPath }: { descriptionPath: Array<PathSegment> }) => {
-  let description = useBranchData(descriptionPath);
+  let description = useBranchData<any>(descriptionPath);
   return <div className='text-sm text-gray-900'>{description}</div>
 }
 
@@ -83,7 +83,7 @@ interface SupplementaryDetail {
 }
 
 const SupplementaryDetail = ({ name, path }: SupplementaryDetail) => {
-  let value = useBranchData(path);
+  let value = useBranchData<any>(path);
   return (
     <span className='inline-block px-2 py-1 text-sm bg-gray-100 rounded-3xl'>
       <span className='text-gray-300'>{name}:</span>{' '}

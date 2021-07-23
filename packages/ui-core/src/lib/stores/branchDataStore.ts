@@ -8,74 +8,74 @@ import { internalNodeDataStore } from './internalNodeDataStore';
 import { rendererRegStore } from './rendererRegStore';
 import { nanoid } from 'nanoid';
 import { NodeConfig } from '../NodeConfig';
-import internal from 'stream';
+import { NodeMetaData } from './NodeMetaData';
 
-const treeDataMap: Map<string, RecoilValueReadOnly<any>> = new Map()
+const treeDataMap: Map<string, RecoilValueReadOnly<unknown>> = new Map()
 
-const get = <T>(startingPath: Array<PathSegment>, depth?: number) => {
+const get = <T>(startingPath: Array<PathSegment>, depth?: number): RecoilValueReadOnly<T> => {
   if (!startingPath) throw new Error('Path is required to get descendent data')
   const key = pathToKey(startingPath)
   let treeDataSelector = treeDataMap.get(key)
-  if (treeDataSelector) return treeDataSelector
+  if (treeDataSelector) return treeDataSelector as RecoilValueReadOnly<T>
 
-  treeDataSelector = selector<T>({
+  treeDataSelector = selector<T | null>({
     key: nanoid(),
     get: ({get}) => {
-      function getNodeData(path: Array<PathSegment>): any {
+      function getNodeMetaData(path: Array<PathSegment>): Array<NodeMetaData> {
         const pathConfigsState = pathConfigsStore.get(path)
         const pathConfigs = get(pathConfigsState)
-        if(typeof pathConfigs === 'undefined') return null
+        if(!pathConfigs?.length) throw new Error(`Couldn't find paths at '${path.join('/')}'`)
 
         /**
          * Gets child data for a config
          * @param config - the last config in a nodes configs. This node is the one that could have child paths. The rest are transparent.
          */
-        function getChildData(config: NodeConfig){
+        function getChildMetaData(config: NodeConfig): Array<NodeMetaData>{
           const layerState = pathLayerStore.get(path, config)
           const layer = get(layerState)
-          if(typeof layer === 'undefined') return null
+          if(typeof layer === 'undefined') return []
           const childPathsState = childPathStore.get(path, layer)
           const childPaths = get(childPathsState)
-          if(typeof childPaths === 'undefined' || childPaths.length === 0) return null
+          if(typeof childPaths === 'undefined' || childPaths.length === 0) return []
           // Child data may come back in array form for transparent merges
           return childPaths.flatMap(childPath => {
-            const children = getNodeData(childPath)
+            const children = getNodeMetaData(childPath)
             return Array.isArray(children) ? children : [ children ]
           })
         }
 
-        if(!pathConfigs.length) return null
-        const childData = getChildData(pathConfigs[pathConfigs.length - 1])
+        const childMetaData = getChildMetaData(pathConfigs[pathConfigs.length - 1])
         // transform from the bottom most path node -> up
-        const externalNodeData = [ ...pathConfigs ].reverse().reduce<any>((a, c) => {
+        const nodeMetaData = [ ...pathConfigs ].reverse().reduce<Array<NodeMetaData>>((a, c) => {
           const layerState = pathLayerStore.get(path, c)
           const layer = get(layerState)
           if(typeof layer === 'undefined') return a
           const internalDataState = internalNodeDataStore.get(path, c, layer)
-          const internalData = get(internalDataState)
+          const internalData = get<unknown>(internalDataState)
           if(a?.length){
             const rendererReg = rendererRegStore.get(c.type)
             if (!rendererReg.mergeChildData){
-              return { config: c, data: internalData }
+              return [ { config: c, data: internalData } ]
             }
             else{
-              return rendererReg.mergeChildData(c, a)
+              const mergeResult = rendererReg.mergeChildData(c, a)
+              return Array.isArray(mergeResult) ? mergeResult : [ mergeResult ]
             }
           } else{
-            return typeof internalData === 'undefined' ? a : { config: c, data: internalData }
+            return typeof internalData === 'undefined' ? a : [ { config: c, data: internalData } ]
           }
-
-        }, childData)
-        console.log({ path: path.join('/'), externalNodeData })
-        return externalNodeData
+        }, childMetaData)
+        console.log({ path: path.join('/'), externalNodeData: nodeMetaData })
+        return nodeMetaData
       }
 
-      return getNodeData(startingPath).data
+      const nodeData = getNodeMetaData(startingPath)
+      return nodeData.length ? nodeData[0].data as T : null // Not great but hard to see what else to do here
     }
   });
   treeDataMap.set(key, treeDataSelector)
 
-  return treeDataSelector
+  return treeDataSelector as RecoilValueReadOnly<T>
 }
 
 const has = (startingPath: Array<PathSegment>) => {

@@ -1,5 +1,5 @@
-import { NodeConfig } from '@gdmf/ui-core';
+import { Merger } from '@gdmf/ui-core';
 
-export const transparentChildDataMerger = (config: NodeConfig, childData: unknown) => {
+export const transparentChildDataMerger:Merger = (config, childData) => {
   return childData
 }

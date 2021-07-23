@@ -23,7 +23,7 @@ export interface Merger {
   (
     config: NodeConfig,
     children: Array<{ config: NodeConfig, data: unknown }>
-  ): unknown | Array<unknown>
+  ): { config: NodeConfig, data: unknown } | Array<{ config: NodeConfig, data: unknown }>
 }
 
 export interface Initialiser {
