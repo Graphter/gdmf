@@ -18,7 +18,9 @@ export const ObjectRenderer: ComponentType<NodeRendererProps> = (
       const childPathKey = pathToKey(childMeta.path)
       return (
         <div key={pathToKey(childMeta.path)} className='flex flex-col mb-5'>
-          <label htmlFor={childPathKey}>{property.name}</label>
+          {property.name && (
+            <label htmlFor={childPathKey}>{property.name}</label>
+          )}
           {property.description && (
             <p className='text-sm text-gray-400 mb-2'>{property.description}</p>
           )}

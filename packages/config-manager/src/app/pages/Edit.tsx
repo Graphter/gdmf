@@ -1,61 +1,64 @@
-import { configStore, PathRenderer, pathUtils, useBranchDataCallback, useBranchInitialiser } from '@gdmf/ui-core';
+import {
+  configStore,
+  PathRenderer,
+  pathUtils,
+  serviceStore,
+  useBranchDataCallback,
+  useBranchInitialiser
+} from '@gdmf/ui-core';
 import React, { useEffect, useState } from 'react';
-import { pageModel } from '../models/pageModel';
-import { simpleTextModel } from '../models/simpleTextModel';
-import { pageData } from '../models/pageData';
 import { useParams } from 'react-router-dom';
 import { BreadCrumbs } from '../components/BreadCrumb/BreadCrumbs';
-import { PathQuery } from '@gdmf/ui-core'
+import { PathQuery } from '@gdmf/ui-core';
 
 export const Edit = () => {
-  const params = useParams<{ model: string, path: string }>();
-  const path = [ params.model, ...pathUtils.fromUrl(params.path) ]
-  const rootPath = path.slice(0, 2)
+  const params = useParams<{ configId: string, path: string }>();
+  const path = [ params.configId, ...pathUtils.fromUrl(params.path) ];
+  const rootPath = path.slice(0, 2);
 
   const save = useBranchDataCallback(rootPath, async (branchData) => {
-    console.log({ branchData })
-  })
+    console.log({ branchData });
+  });
 
-  const [ initialising, setInitialising ] = useState(true)
+  const [ initialising, setInitialising ] = useState(true);
 
-  configStore.set(pageModel)
-  configStore.set(simpleTextModel)
-
-  const branchInitialiser = useBranchInitialiser()
+  const branchInitialiser = useBranchInitialiser();
   useEffect(() => {
     (async () => {
       setInitialising(true)
-      await branchInitialiser(rootPath, pageModel, '', pageData)
-
+      const service = serviceStore.get(params.configId)
+      if(!service.get) throw new Error(`Service '${params.configId}' lacks the get() capability required to edit`)
+      const config = configStore.get(params.configId)
+      if(!config) throw new Error(`Couldn't find '${params.configId}' config`)
+      const getResult = await service.get(path[1])
+      await branchInitialiser(rootPath, config, '', getResult.item)
       setInitialising(false)
-    })()
-  }, [])
-
-  if(initialising){
-    return (
-      <div>
-        Loading...
-      </div>
-    )
-  }
+    })();
+  }, [params.configId]);
 
   return (
-    <div className="App container p-10 mt-10 rounded-2xl bg-white">
-      <BreadCrumbs path={path} mappings={[
-        { pathQuery: [ 'page' ], displayValue: 'Pages' },
-        { pathQuery: [ 'page', PathQuery.Any ], displayPath: [ 'title' ] },
-        { pathQuery: [ 'page', PathQuery.Any, 'authors' ], displayValue: 'Authors' },
-        { pathQuery: [ 'page', PathQuery.Any, 'authors', PathQuery.Any ], displayPath: [ 'name' ] },
-      ]} />
-      <form onSubmit={(e) => {
-        (async () => {
-          await save()
-        })()
-        e.preventDefault()
-      }}>
-        <PathRenderer path={path} />
-        <button type='submit'>Save</button>
-      </form>
-    </div>
+    <>
+      {initialising ? (
+        <div>
+
+        </div>
+      ) : (
+        <form onSubmit={(e) => {
+          (async () => {
+            await save();
+          })();
+          e.preventDefault();
+        }}>
+          <BreadCrumbs path={path} mappings={[
+            { pathQuery: [ 'page' ], displayValue: 'Pages' },
+            { pathQuery: [ 'page', PathQuery.Any ], displayPath: [ 'title' ] },
+            { pathQuery: [ 'page', PathQuery.Any, 'blogAuthors' ], displayValue: 'Authors' },
+            { pathQuery: [ 'page', PathQuery.Any, 'blogAuthors', PathQuery.Any ], displayPath: [ 'name' ] }
+          ]} />
+          <PathRenderer path={path} />
+          <button type='submit'>Save</button>
+        </form>
+      )}
+    </>
   );
-}
+};

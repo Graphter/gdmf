@@ -4,6 +4,15 @@ export const pageModel = {
   createDefault: () => ({}),
   properties: [
     {
+      name: 'ID',
+      description: 'A unique identifier for the page',
+      config: {
+        id: 'id',
+        type: 'text',
+        createDefault: () => ''
+      }
+    },
+    {
       name: 'Title',
       description: 'The page description',
       config: {

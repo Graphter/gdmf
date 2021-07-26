@@ -1,4 +1,5 @@
 export const pageData = {
+  id: 'one',
   title: 'Some blog post',
   description: 'This is a blog post about something',
   type: 'blog',
