@@ -7,7 +7,8 @@ export interface NodeRendererRegistration {
   renderer: ComponentType<NodeRendererProps>,
   createDefault?: (config: NodeConfig) => any | Promise<any>,
   mergeChildData?: Merger,
-  initialiser?: Initialiser
+  initialiser?: Initialiser,
+  config?: NodeConfig
 }
 
 export interface InitResult {

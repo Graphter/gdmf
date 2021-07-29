@@ -8,11 +8,14 @@ export const NestedRenderer: ComponentType<NodeRendererProps> = (
     config
   }
 ) => {
-  isNestedNodeConfig(config)
-  const { childMetas, layer } = useNodeState(path, config)
-  if(!childMetas.length) return null
-  const nestedChildMeta = childMetas[0]
-  return <>
-    <DefaultNodeRenderer nodeMeta={nestedChildMeta} parentLayer={layer} />
-  </>
-}
+  isNestedNodeConfig(config);
+  const { childMetas, layer } = useNodeState(path, config);
+  if (!childMetas.length) return null;
+  return (
+    <>
+      {childMetas.map(childMeta => (
+        <DefaultNodeRenderer nodeMeta={childMeta} parentLayer={layer} />
+      ))}
+    </>
+  );
+};

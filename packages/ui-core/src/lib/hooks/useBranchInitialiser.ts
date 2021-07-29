@@ -125,6 +125,7 @@ export const useBranchInitialiser = () => {
             console.log(`Setting Path configs for path: '${path.join('/')}', layer: '${initResult.layer}'`, newPathConfigs)
             mutableSnapshot.set(pathConfigsState, newPathConfigs)
           }
+
           // Init children
           if (initResult.children) {
             await Promise.all(initResult.children.map(child => initialiseNode(child.path, child.config, initResult.layer)))

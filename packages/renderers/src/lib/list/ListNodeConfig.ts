@@ -4,7 +4,7 @@ export interface ListNodeConfig extends NodeConfig {
   itemConfig: NodeConfig,
   titlePath: Array<PathSegment>,
   descriptionPath?: Array<PathSegment>,
-  supplementaryInformationPaths: Array<{
+  supplementaryInformationPaths?: Array<{
     name: string,
     path: Array<PathSegment>
   }>

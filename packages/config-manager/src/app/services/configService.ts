@@ -9,10 +9,10 @@ import {
 /**
  * Stores all the known configs
  */
-export const configService: Service<NodeConfig> = {
-  get: (configId: PathSegment) => {
+export const configService: Service<NodeConfig, string> = {
+  get: (configId: string) => {
     return Promise.resolve({
-      item: configStore.get(configId.toString()) || null
+      item: configStore.get(configId) || null
     });
   },
   list: () => {

@@ -1,6 +1,7 @@
 import { ObjectRenderer } from './ObjectRenderer';
 import { objectInitialiser } from './objectInitialiser';
 import { NodeRendererRegistration } from '@gdmf/ui-core';
+import { objectRendererConfig } from './objectRendererConfig';
 
 export const objectRegistration: NodeRendererRegistration = {
   type: 'object',
@@ -13,5 +14,6 @@ export const objectRegistration: NodeRendererRegistration = {
     }, {})
     return { config, data }
   },
-  initialiser: objectInitialiser
+  initialiser: objectInitialiser,
+  config: objectRendererConfig
 }

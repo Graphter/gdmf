@@ -1,9 +1,9 @@
 import { PathSegment } from '@gdmf/ui-core';
 
-export interface Service<T> {
+export interface Service<T, D> {
   list?: (skip?: number, take?: number) => Promise<ListResult<T>>,
-  get?: (id: PathSegment) => Promise<GetResult<T>>,
-  save?: (id: PathSegment, data: unknown) => Promise<SaveResult<T>>
+  get?: (id: D) => Promise<GetResult<T>>,
+  save?: (id: D, data: unknown) => Promise<SaveResult<T>>
 }
 
 export interface ListResult<T> {

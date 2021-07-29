@@ -25,7 +25,7 @@ export const List = ({ configId, idPath, displayPath }: ListProps) => {
 
   const config = configStore.get(configId)
   if(!config) throw new Error(`Couldn't find '${configId}' config. Have you registered it with the config store?`)
-  const service = serviceStore.get<unknown>(configId);
+  const service = serviceStore.get(configId);
   const [ listResult, setListResult ] = useState<ListResult<unknown> | null>(null);
 
   const [ initialising, setInitialising ] = useState(true);
@@ -36,7 +36,7 @@ export const List = ({ configId, idPath, displayPath }: ListProps) => {
       if (!service.list) throw new Error(`Service '${configId}' lacks list() capability required to display the list page`);
       setInitialising(true);
       const itemResult = await service.list()
-      await Promise.all(itemResult.items.map((item) => {
+      await Promise.all(itemResult.items.map((item: unknown) => {
         const instanceId = pathUtils.getValueByLocalPath(item, idPath)
         return branchInitialiser([ config.id, instanceId ], config, '', item)
       }))

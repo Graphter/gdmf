@@ -7,7 +7,7 @@ import {
   from '@gdmf/ui-core';
 import { pageData } from '../models/pageData';
 
-export const pageService: Service<unknown> = {
+export const pageService: Service<unknown, string> = {
   get: () => {
     return Promise.resolve({
       item: pageData

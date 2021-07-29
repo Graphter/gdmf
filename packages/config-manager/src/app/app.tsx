@@ -20,6 +20,7 @@ import { Model } from './pages/Model';
 import { pageService } from './services/pageService';
 import { configService } from './services/configService';
 import { simpleTextModel } from './models/simpleTextModel';
+import { rendererConfigService } from './services/rendererConfigService';
 
 function App() {
   rendererRegStore.register(objectRegistration)
@@ -31,6 +32,7 @@ function App() {
   rendererRegStore.register(dynamicNestedRegistration)
 
   serviceStore.register('page', pageService)
+  serviceStore.register('renderer-config', rendererConfigService)
   serviceStore.register('config', configService)
 
   configStore.setAll([

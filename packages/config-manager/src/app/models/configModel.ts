@@ -3,7 +3,7 @@ export const configModel = {
   type: 'object',
   properties: [
     {
-      name: 'id',
+      name: 'ID',
       description: 'An identifier for the config.',
       config: {
         id: 'id',
@@ -11,7 +11,7 @@ export const configModel = {
       }
     },
     {
-      name: 'type',
+      name: 'Renderer Type',
       description: 'The renderer type. Must be one of those registered on init.',
       config: {
         id: 'type',
@@ -19,11 +19,10 @@ export const configModel = {
       }
     },
     {
-      name: 'Node Config',
       config: {
         id: 'rendererSpecificProperties',
         type: 'dynamic-nested',
-        configServiceId: 'config',
+        configServiceId: 'renderer-config',
         targetPathQuery: [ { $up: 1 }, 'type' ]
       }
     }
