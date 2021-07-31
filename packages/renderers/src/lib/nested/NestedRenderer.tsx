@@ -1,6 +1,6 @@
 import { isNestedNodeConfig } from './isNestedNodeConfig';
 import { ComponentType } from 'react';
-import { DefaultNodeRenderer, NodeRendererProps, useNodeState } from '@gdmf/ui-core';
+import { DefaultNodeRenderer, NodeRendererProps, pathToKey, useNodeState } from '@gdmf/ui-core';
 
 export const NestedRenderer: ComponentType<NodeRendererProps> = (
   {
@@ -14,7 +14,7 @@ export const NestedRenderer: ComponentType<NodeRendererProps> = (
   return (
     <>
       {childMetas.map(childMeta => (
-        <DefaultNodeRenderer nodeMeta={childMeta} parentLayer={layer} />
+        <DefaultNodeRenderer key={pathToKey(childMeta.path)} nodeMeta={childMeta} parentLayer={layer} />
       ))}
     </>
   );

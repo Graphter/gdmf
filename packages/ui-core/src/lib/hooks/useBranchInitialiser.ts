@@ -12,6 +12,7 @@ import { pathToKey, pathUtils } from '../utils/pathUtils';
 import { defaultUtils } from '../utils/defaultUtils';
 import { branchDataStore } from '../stores/branchDataStore';
 import * as Path from 'path';
+import { configUtils } from '../utils/configUtils';
 
 export interface StateUpdate {
   path: Array<PathSegment>,
@@ -117,14 +118,19 @@ export const useBranchInitialiser = () => {
           }
           const pathConfigsState = pathConfigsStore.get(path)
           const pathConfigs = await mutableSnapshot.getPromise(pathConfigsState)
-          const configIndex = pathConfigs.findIndex(pathConfig => pathConfig.id === config.id)
+          const configIndex = configUtils.findIndex(pathConfigs, config)
+
           if(configIndex < pathConfigs.length -1) {
+            if(configIndex === -1 && pathConfigs.some(pathConfigs => pathConfigs.id === config.id)){
+              throw new Error(`Found two configs with the same ID '${config.id}' within the same data node. For now, each config within a data node must have a unique ID.`)
+            }
             const newPathConfigs = configIndex === -1 ?
               [ ...pathConfigs, config ] :
               pathConfigs.slice(0, configIndex + 1)
             console.log(`Setting Path configs for path: '${path.join('/')}', layer: '${initResult.layer}'`, newPathConfigs)
             mutableSnapshot.set(pathConfigsState, newPathConfigs)
           }
+
 
           // Init children
           if (initResult.children) {
