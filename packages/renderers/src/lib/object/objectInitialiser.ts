@@ -1,3 +1,11 @@
+/**
+ * What do I do?
+ * I tell the system
+ * - What my internal state is
+ * - What layer this meta belongs to
+ * - Who my children are
+ */
+
 import { isObjectNodeConfig } from './isObjectNodeConfig';
 import { Initialiser } from '@gdmf/ui-core';
 

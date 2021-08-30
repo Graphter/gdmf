@@ -10,7 +10,6 @@ export const DefaultNodeRenderer = ({ nodeMeta, parentLayer }: DefaultNodeRender
   const rendererReg = rendererRegStore.get(nodeMeta.config.type)
   return (
     <rendererReg.renderer
-      key={nodeMeta.config.id + nodeMeta.config.type}
       path={nodeMeta.path}
       config={nodeMeta.config}
       parentLayer={parentLayer}/>

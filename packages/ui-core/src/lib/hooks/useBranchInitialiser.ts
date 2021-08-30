@@ -121,9 +121,6 @@ export const useBranchInitialiser = () => {
           const configIndex = configUtils.findIndex(pathConfigs, config)
 
           if(configIndex < pathConfigs.length -1) {
-            if(configIndex === -1 && pathConfigs.some(pathConfigs => pathConfigs.id === config.id)){
-              throw new Error(`Found two configs with the same ID '${config.id}' within the same data node. For now, each config within a data node must have a unique ID.`)
-            }
             const newPathConfigs = configIndex === -1 ?
               [ ...pathConfigs, config ] :
               pathConfigs.slice(0, configIndex + 1)

@@ -1,6 +1,6 @@
 import { Route, Link } from 'react-router-dom';
 import {
-  configStore,
+  configStore, pathConfigsStore,
   rendererRegStore, serviceStore
 } from '@gdmf/ui-core';
 import React, { Fragment }  from 'react';
@@ -40,6 +40,9 @@ function App() {
     configModel,
     simpleTextModel
   ])
+
+  pathConfigsStore.set([ pageModel ], ['page'])
+  pathConfigsStore.set([ configModel ], ['config'])
 
   const navModels = [
     pageModel,

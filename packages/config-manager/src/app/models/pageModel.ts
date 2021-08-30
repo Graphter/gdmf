@@ -43,13 +43,13 @@ export const pageModel = {
       name: 'Authors',
       description: 'The authors of the page',
       config: {
-        id: 'authors-conditional',
+        id: 'authors',
         type: 'conditional',
         branches: new Map<string, any>([
           [
             'blog',
             {
-              id: 'blogAuthors',
+              id: 'blog-authors',
               type: 'list',
               titlePath: ['name'],
               supplementaryInformationPaths: [

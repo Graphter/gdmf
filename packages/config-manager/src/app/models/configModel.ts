@@ -20,7 +20,7 @@ export const configModel = {
     },
     {
       config: {
-        id: 'rendererSpecificProperties',
+        id: 'nested-config',
         type: 'dynamic-nested',
         configServiceId: 'renderer-config',
         targetPathQuery: [ { $up: 1 }, 'type' ]

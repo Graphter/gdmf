@@ -8,11 +8,12 @@ import { pathConfigsStore } from './pathConfigsStore';
 import { NodeMeta } from '../NodeMeta';
 import { NodeConfig } from '../NodeConfig';
 import { configUtils } from '../utils/configUtils';
+import stringify from 'fast-json-stable-stringify'
 
 const childPathConfigsMap = new Map<string, RecoilValueReadOnly<Array<NodeMeta>>>();
 
 const pathConfigLayerToKey = (path: Array<PathSegment>, config: NodeConfig, layer: string) =>
-  `config:${config.id}-bf3ad41b-16f2-4715-9a10-c2c496204320-${pathLayerToKey(path, layer)}`;
+  `config:${stringify(config)}-bf3ad41b-16f2-4715-9a10-c2c496204320-${pathLayerToKey(path, layer)}`;
 
 const get = (path: Array<PathSegment>, config: NodeConfig, layer: string) => {
   const key = pathConfigLayerToKey(path, config, layer);

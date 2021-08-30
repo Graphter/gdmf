@@ -6,10 +6,14 @@ import {
   useBranchDataCallback,
   useBranchInitialiser
 } from '@gdmf/ui-core';
+import { pageModel } from '../models/pageModel';
+import { configModel } from '../models/configModel';
+import { Model } from '../pages/Model';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { BreadCrumbs } from '../components/BreadCrumb/BreadCrumbs';
 import { PathQuery } from '@gdmf/ui-core';
+import { breadcrumbMappings } from '../breadcrumbMappings';
 
 export const Edit = () => {
   const params = useParams<{ configId: string, path: string }>();
@@ -36,6 +40,13 @@ export const Edit = () => {
     })();
   }, [params.configId]);
 
+  // [
+  //   { rootConfigId: 'page', relativePathQuery: [ 'page' ], displayValue: 'Pages' },
+  //   { relativePathQuery: [ 'page', PathQuery.Any ], displayPath: [ 'title' ] },
+  //   { relativePathQuery: [ 'page', PathQuery.Any, 'blogAuthors' ], displayValue: 'Authors' },
+  //   { relativePathQuery: [ 'page', PathQuery.Any, 'blogAuthors', PathQuery.Any ], displayPath: [ 'name' ] }
+  // ]
+
   return (
     <>
       {initialising ? (
@@ -49,12 +60,7 @@ export const Edit = () => {
           })();
           e.preventDefault();
         }}>
-          <BreadCrumbs path={path} mappings={[
-            { pathQuery: [ 'page' ], displayValue: 'Pages' },
-            { pathQuery: [ 'page', PathQuery.Any ], displayPath: [ 'title' ] },
-            { pathQuery: [ 'page', PathQuery.Any, 'blogAuthors' ], displayValue: 'Authors' },
-            { pathQuery: [ 'page', PathQuery.Any, 'blogAuthors', PathQuery.Any ], displayPath: [ 'name' ] }
-          ]} />
+          <BreadCrumbs path={path} mappings={breadcrumbMappings} />
           <PathRenderer path={path} />
           <button type='submit'>Save</button>
         </form>

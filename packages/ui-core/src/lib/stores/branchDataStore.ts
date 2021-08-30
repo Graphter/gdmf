@@ -34,6 +34,7 @@ const get = <T>(startingPath: Array<PathSegment>, depth?: number): RecoilValueRe
           const layerState = pathLayerStore.get(path, config)
           const layer = get(layerState)
           if(typeof layer === 'undefined') return []
+          if(!childPathStore.has(path, layer)) return []
           const childPathsState = childPathStore.get(path, layer)
           const childPaths = get(childPathsState)
           if(typeof childPaths === 'undefined' || childPaths.length === 0) return []

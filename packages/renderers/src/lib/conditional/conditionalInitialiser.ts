@@ -19,9 +19,8 @@ export const conditionalInitialiser: Initialiser = async (
   if(!matchingConfig){
     return { layer: '' }
   }
-  path = [ ...path.slice(0, -1), matchingConfig.id]
   const result: InitResult = {
-    layer: `${parentLayer}[${matchingConfig.id}]`,
+    layer: `${parentLayer}[${targetDataKey}]`,
     children: [
       {
         path,

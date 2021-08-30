@@ -3,7 +3,7 @@ export const pageData = {
   title: 'Some blog post',
   description: 'This is a blog post about something',
   type: 'blog',
-  blogAuthors: [
+  authors: [
     {
       name: 'Jon Pritchard',
       address: {

@@ -11,6 +11,8 @@ import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { ListItem } from './ListItem';
 import { BreadCrumbs } from '../BreadCrumb/BreadCrumbs';
+import { pageModel } from '../../models/pageModel';
+import { breadcrumbMappings } from '../../breadcrumbMappings';
 
 export interface ListProps {
   configId: string,
@@ -21,10 +23,10 @@ export interface ListProps {
 export const List = ({ configId, idPath, displayPath }: ListProps) => {
   const params = useParams<{ configId: string }>();
 
-  const path = [ params.configId ]
+  const path = [ params.configId ];
 
-  const config = configStore.get(configId)
-  if(!config) throw new Error(`Couldn't find '${configId}' config. Have you registered it with the config store?`)
+  const config = configStore.get(configId);
+  if (!config) throw new Error(`Couldn't find '${configId}' config. Have you registered it with the config store?`);
   const service = serviceStore.get(configId);
   const [ listResult, setListResult ] = useState<ListResult<unknown> | null>(null);
 
@@ -35,11 +37,11 @@ export const List = ({ configId, idPath, displayPath }: ListProps) => {
     (async () => {
       if (!service.list) throw new Error(`Service '${configId}' lacks list() capability required to display the list page`);
       setInitialising(true);
-      const itemResult = await service.list()
+      const itemResult = await service.list();
       await Promise.all(itemResult.items.map((item: unknown) => {
-        const instanceId = pathUtils.getValueByLocalPath(item, idPath)
-        return branchInitialiser([ config.id, instanceId ], config, '', item)
-      }))
+        const instanceId = pathUtils.getValueByLocalPath(item, idPath);
+        return branchInitialiser([ config.id, instanceId ], config, '', item);
+      }));
       setListResult(itemResult);
 
       setInitialising(false);
@@ -49,23 +51,21 @@ export const List = ({ configId, idPath, displayPath }: ListProps) => {
   return (
     <>
 
-      <BreadCrumbs path={path} mappings={[
-        { pathQuery: [ 'page' ], displayValue: 'Pages' },
-      ]} />
+      <BreadCrumbs path={path} mappings={breadcrumbMappings} />
 
       {
         !initialising && listResult ? (
           listResult.items?.map(item => {
-            const id = pathUtils.getValueByLocalPath(item, idPath)
-            const displayValue = pathUtils.getValueByLocalPath(item, displayPath)
+            const id = pathUtils.getValueByLocalPath(item, idPath);
+            const displayValue = pathUtils.getValueByLocalPath(item, displayPath);
             return (
               <div key={id}>
                 <Link to={`/${config.id}/${id}`}>{displayValue}</Link>
               </div>
-            )
+            );
           })) : (
-            <div>Loading...</div>
-          )
+          <div>Loading...</div>
+        )
       }
     </>
   );

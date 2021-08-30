@@ -19,6 +19,10 @@ export const ListRenderer: ComponentType<NodeRendererProps> = (
     layer
   } = useNodeState<InternalListData>(path, config);
 
+  if(childMetas.length !== internalData.length){
+    throw new Error(`Child metas vs internal data length mismatch. Something wrong with init.`)
+  }
+
   return <>
     {childMetas.map((childMeta, i) => {
       const { committed, deleted, order, editing } = internalData[i];
